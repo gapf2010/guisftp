@@ -1,5 +1,8 @@
 #include "main.h"
 
+// Application name
+#define APPNAME "guisftp"
+
 // Version number
 #define VERSION "1.2.1"
 
@@ -2017,6 +2020,15 @@ void delete_remote_file_scp(AppData *data, const char *path) {
     gtk_label_set_text(GTK_LABEL(data->status_label), msg);
 }
 
+// Recursively delete remote directory
+void delete_remote_directory(AppData *data, const char *path) {
+    if (data->protocol == 0) {
+        delete_remote_directory_sftp(data, path);
+    } else if (data->protocol == 1) {
+        delete_remote_directory_scp(data, path);
+    }
+}
+
 // Recursively delete remote directory using SFTP
 void delete_remote_directory_sftp(AppData *data, const char *path) {
     sftp_dir dir = sftp_opendir(data->sftp, path);
@@ -3241,7 +3253,7 @@ char* prompt_password(char* title_text, char* label_text, gboolean show_text) {
 // Determine the configuration file path
 char* get_config_file_path(void) {
     const char *home = g_get_home_dir();
-    char *config_dir = g_build_filename(home, ".guiscp", NULL);
+    char *config_dir = g_build_filename(home, ".", APPNAME, NULL);
     
     // Create directory if one does not already exist
     if (!g_file_test(config_dir, G_FILE_TEST_IS_DIR)) {
@@ -3256,7 +3268,7 @@ char* get_config_file_path(void) {
 // Path to the known_hosts file
 char* get_known_hosts_file_path(void) {
     const char *home = g_get_home_dir();
-    char *config_dir = g_build_filename(home, ".guiscp", NULL);
+    char *config_dir = g_build_filename(home, ".", APPNAME, NULL);
     
     // Create directory if one does not already exist
     if (!g_file_test(config_dir, G_FILE_TEST_IS_DIR)) {
@@ -3811,7 +3823,7 @@ void on_support_clicked(GtkWidget *widget, gpointer data) {
 GtkWidget* create_gui(AppData *data) {
     GtkWidget *window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
     char title[256];
-    snprintf(title, sizeof(title), "GuiSCP %s - File Transfer", VERSION);
+    snprintf(title, sizeof(title), "%s %s - File Transfer", APPNAME, VERSION);
     gtk_window_set_title(GTK_WINDOW(window), title);
     gtk_window_set_default_size(GTK_WINDOW(window), 1200, 700);
     g_signal_connect(window, "destroy", G_CALLBACK(gtk_main_quit), NULL);

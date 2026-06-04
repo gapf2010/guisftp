@@ -1,7 +1,7 @@
 CC = gcc
 CFLAGS = -Wall -Wextra -std=c11 -O2
 LIBS = `pkg-config --cflags --libs gtk+-3.0` -lssh
-TARGET = guiscp
+TARGET = guisftp
 SRC = main.c
 
 # Standard-Ziel

@@ -56,6 +56,7 @@ void delete_remote_file(AppData *data, const char *path);
 void delete_remote_file_sftp(AppData *data, const char *path);
 void delete_remote_file_scp(AppData *data, const char *path);
 
+void delete_remote_directory(AppData *data, const char *path);
 void delete_remote_directory_sftp(AppData *data, const char *path);
 void delete_remote_directory_scp(AppData *data, const char *path);
 
